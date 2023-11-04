@@ -11,32 +11,45 @@ class BD:
         self.banco = sqlite3.connect(banco_dados)
         self.cursor = self.banco.cursor()
 
-        self.criarTabelaFilmes()
+        self.criarTabelaRoupas()
 
-    def criarTabelaFilmes(self):
+    def criarTabelaRoupas(self):
         self.cursor.execute("""
-            CREATE TABLE IF NOT EXISTS filmes(
+            CREATE TABLE IF NOT EXISTS Roupas(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 titulo TEXT NOT NULL,
                 genero TEXT NOT NULL,
-                duracao TEXT NULL,
-                diretor TEXT NULL,
-                estudio TEXT NULL,
-                classificacao TEXT NULL,
-                ano DATE NULL
+                valor TEXT NULL
+                
             )
         """)
 
     def inserir(self, tabela, valores):
-        colunas = ', '. join (valores.keys())
-        placesholders = ', '. join (['?'] * len())
+        colunas = ', '.join(valores.keys())
+        placeholders = ', '.join(['?'] * len(valores))
 
         # Cria a sql do banco de dados
-
-        sql = f"INSERT INTO {tabela} ({colunas}) VALUES ({placesholders})"
+        sql = f"INSERT INTO {tabela} ({colunas}) VALUES ({placeholders})"
 
         # Executa a sql no banco de dados
-        sql.cursor.execute(sql,tuple(valores.values()))
+        self.cursor.execute(sql, tuple(valores.values()))
 
-        #Confirma alterações no banco de dados
+        # Confirma as alterações do banco
         self.banco.commit()
+
+        # Verifica se deu certo o armazenamento
+        if self.cursor.lastrowid:
+            print(f"{tabela} salvo com sucesso!")
+            return True
+        else:
+            print("Erro ao cadastrar dados!")
+            return False
+        
+    def buscaDados(self, tabela, campos = '*'):
+        sql = f"SELECT {campos} FROM {tabela}"
+        self.cursor.execute(sql)
+
+        # Pega todos os dados retornados pelo banco
+        # e guarda na variavel dados
+        dados = self.cursor.fetchall()
+        return dados

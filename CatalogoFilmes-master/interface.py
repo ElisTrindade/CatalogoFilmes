@@ -1,14 +1,15 @@
 import os
-
+from bd import BD
 # Classe para interface do usuário do programa
+
 class Interface:
     # Construtor
     def __init__(self):
-        pass
+        self.banco = BD("catalogoRoupas.db")
 
     def logotipo(self):
         print("============================")
-        print("=====Catalogo de Filmes=====")
+        print("=====Catalogo de Roupas=====")
         print("============================")
         print()
 
@@ -41,24 +42,46 @@ class Interface:
 
     # Mostra menu principal do sistema
     def mostraMenuPrincipal(self):
-        print("1 - Cadastrar filme")
-        print("2 - Lista de filmes")
+        print("1 - Cadastrar Roupas")
+        print("2 - Lista de Roupas")
         print("0 - Sair")
         print()
 
-    def mostraCadastroFilmes(self):
+    def mostraCadastroRoupas(self):
         self.logotipo()
 
-        print("Insira os dados do filme:")
+        print("Insira os dados da Peça:")
         print("(campos com * são obrigatórios)")
+        print()
 
-        titulo = self.solicitaValor('Digite o título: ', 'texto', False)
-        genero = self.solicitaValor('Digite o gênero: ', 'texto', False)
-        duracao = self.solicitaValor('Digite a duração: ', 'texto', True)
-        diretor = self.solicitaValor('Digite o nome do diretor: ', 'texto', True)
-        estudio = self.solicitaValor('Digite o nome do estúdio: ', 'texto', True)
-        classificacao = self.solicitaValor('Digite a classificação: ', 'texto', True)
-        ano = self.solicitaValor('Digite o ano: ', 'numero', True)
+        titulo = self.solicitaValor('Digite o título*: ', 'texto', False)
+        genero = self.solicitaValor('Digite o gênero*: ', 'texto', False)
+        valor = self.solicitaValor('Digite o valor*: ', 'texto', True)
+
+        # Armazena os valores no banco de dados!
+        valores = {
+            "titulo": titulo,
+            "genero": genero,
+            "valor": valor,
+            
+        }
+
+        self.banco.inserir('Roupas', valores)
+
+    def mostrarListaRoupas(self):
+        self.logotipo()
+        print("Veja abaixo a lista de Roupas cadastradas.")
+        print()
+
+        Roupas = self.banco.buscaDados('Roupas')
+
+        for Roupa in Roupas:
+            id, titulo, genero, valor = Roupa
+            print(f"Roupa {id} - {titulo} | {genero}")
+
+        print()
+
+        input("Aperte Enter para continuar...")
 
     # Solicita um valor do usuário e valida ele.
     # return valorDigitado

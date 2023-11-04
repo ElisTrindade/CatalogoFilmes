@@ -4,7 +4,6 @@ from bd import BD
 
 # Classe principal do programa
 interface = Interface()
-banco = BD("catalogoFilmes.db")
 
 opcao = ""
 while opcao != 0:
@@ -13,10 +12,15 @@ while opcao != 0:
     opcao = interface.selecionaOpcao([1, 2, 0])
     interface.limpaTela()
 
-    # Tela de cadastro de filmes
+    # Tela de cadastro de Roupas
     if opcao == 1:
-        interface.mostraCadastroFilmes()
+        interface.mostraCadastroRoupas()
+        opcao = ""
+        interface.limpaTela()
 
-    # Tela de lista de filmes
-    if opcao == 2:
-        pass
+    # Tela de lista de Roupas
+    elif opcao == 2:
+        # Mostrar tela para lista de Roupas
+        interface.mostrarListaRoupas()
+        opcao = ""
+        interface.limpaTela()
